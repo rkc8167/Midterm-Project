@@ -1,1 +1,297 @@
+// ART MARKET VISUALIZATION - Interactive Bubble Chart (p5.js)
 
+// --- DATA ---
+
+// Auction sales growth by price segment, 2009-2024
+const artMarketData = {
+    ultra: {
+        name: "Ultra high (>$10m)",
+        volume: 140,        // % growth in lots sold
+        value: 190,         // % growth in sales value
+        color: [255, 107, 134], // Pink
+        size: 150,
+        active: true
+    },
+    high: {
+        name: "High ($1m–$10m)",
+        volume: 55,
+        value: 65,
+        color: [74, 222, 128], // Green
+        size: 100,
+        active: true
+    },
+    mid: {
+        name: "Mid ($250k–$1m)",
+        volume: 25,
+        value: 18,
+        color: [167, 139, 250], // Purple
+        size: 60,
+        active: true
+    },
+    middle: {
+        name: "Middle ($50k–$250k)",
+        volume: 15,
+        value: 8,
+        color: [251, 191, 36], // Yellow
+        size: 50,
+        active: true
+    },
+    low: {
+        name: "Low end (<$50k)",
+        volume: 105,
+        value: 12,
+        color: [251, 146, 60], // Orange
+        size: 45,
+        active: true
+    }
+};
+
+// --- GLOBALS ---
+
+let canvas;
+let hoveredSegment = null;
+
+// --- SETUP ---
+
+// Runs once at the start
+function setup() {
+    canvas = createCanvas(900, 500);
+    canvas.parent('canvas-container');
+    setupControls();
+}
+
+// --- DRAW LOOP ---
+
+// Runs every frame
+function draw() {
+    background(255);
+    drawGrid();
+    drawAxes();
+    drawBubbles();
+    drawLabels();
+}
+
+// --- GRID ---
+
+// Draws the background grid lines
+function drawGrid() {
+    stroke(240);
+    strokeWeight(1);
+
+    // Vertical lines
+    for (let x = 80; x <= width - 80; x += (width - 160) / 8) {
+        line(x, 60, x, height - 80);
+    }
+    // Horizontal lines
+    for (let y = 60; y <= height - 80; y += (height - 140) / 10) {
+        line(80, y, width - 80, y);
+    }
+}
+
+// --- AXES ---
+
+// Draws X and Y axes with labels and ticks
+function drawAxes() {
+    stroke(200);
+    strokeWeight(2);
+    line(80, height - 80, width - 80, height - 80); // X-axis
+    line(80, 60, 80, height - 80);                  // Y-axis
+
+    fill(100);
+    noStroke();
+    textAlign(CENTER);
+    textSize(14);
+
+    // X label
+    text("Growth by Volume (% change in lots)", width / 2, height - 30);
+
+    // Y label (vertical)
+    push();
+    translate(25, height / 2);
+    rotate(-HALF_PI);
+    text("Growth by Value (% change in sales)", 0, 0);
+    pop();
+
+    drawAxisTicks();
+}
+
+// Draws tick marks and numbers for both axes
+function drawAxisTicks() {
+    textAlign(CENTER);
+    textSize(12);
+    fill(120);
+
+    // X-axis ticks
+    for (let i = 0; i <= 160; i += 20) {
+        let x = map(i, 0, 160, 80, width - 80);
+        text(i, x, height - 60);
+    }
+
+    // Y-axis ticks
+    textAlign(RIGHT);
+    for (let i = 0; i <= 200; i += 50) {
+        let y = map(i, 0, 200, height - 80, 60);
+        text(i, 70, y + 4);
+    }
+}
+
+// --- BUBBLES ---
+
+// Draws all visible bubbles
+function drawBubbles() {
+    for (let segment in artMarketData) {
+        if (artMarketData[segment].active) {
+            drawBubble(segment);
+        }
+    }
+}
+
+// Draws a single bubble, with gradient and hover effect
+function drawBubble(segment) {
+    const data = artMarketData[segment];
+    let x = map(data.volume, 0, 160, 80, width - 80);
+    let y = map(data.value, 0, 200, height - 80, 60);
+
+    let distance = dist(mouseX, mouseY, x, y);
+    let isHovered = distance < data.size / 2;
+
+    let bubbleSize = isHovered ? data.size * 1.05 : data.size;
+    drawGradientBubble(x, y, bubbleSize, data.color, isHovered);
+
+    if (isHovered) {
+        hoveredSegment = segment;
+    }
+}
+
+// Draws a bubble with a soft gradient and highlight
+function drawGradientBubble(x, y, size, color, isHovered) {
+    let steps = 20;
+    for (let i = steps; i > 0; i--) {
+        let currentSize = (size / steps) * i;
+        let alpha = map(i, 0, steps, 50, isHovered ? 220 : 180);
+        let centerFactor = map(i, 0, steps, 1.2, 0.7);
+        let r = constrain(color[0] * centerFactor, 0, 255);
+        let g = constrain(color[1] * centerFactor, 0, 255);
+        let b = constrain(color[2] * centerFactor, 0, 255);
+
+        fill(r, g, b, alpha);
+        noStroke();
+        ellipse(x, y, currentSize);
+    }
+
+    // Outer stroke
+    noFill();
+    stroke(color[0] * 0.8, color[1] * 0.8, color[2] * 0.8, 100);
+    strokeWeight(isHovered ? 2 : 1);
+    ellipse(x, y, size);
+
+    drawBubbleHighlights(x, y, size, isHovered);
+}
+
+// Adds a highlight for a 3D look
+function drawBubbleHighlights(x, y, size, isHovered) {
+    fill(255, 255, 255, isHovered ? 120 : 80);
+    noStroke();
+    ellipse(x - size * 0.15, y - size * 0.15, size * 0.2);
+
+    fill(255, 255, 255, isHovered ? 60 : 30);
+    ellipse(x - size * 0.1, y - size * 0.1, size * 0.4);
+}
+
+// --- LABELS ---
+
+// Draws labels for each visible bubble
+function drawLabels() {
+    for (let segment in artMarketData) {
+        if (artMarketData[segment].active) {
+            drawLabel(segment);
+        }
+    }
+}
+
+// Draws a label for a bubble, adjusting position to avoid overlap
+function drawLabel(segment) {
+    const data = artMarketData[segment];
+    let x = map(data.volume, 0, 160, 80, width - 80);
+    let y = map(data.value, 0, 200, height - 80, 60);
+
+    let labelX = x;
+    let labelY = adjustLabelPosition(segment, x, y, data.size);
+
+    fill(80);
+    noStroke();
+    textAlign(CENTER);
+    textSize(13);
+    text(data.name, labelX, labelY);
+}
+
+// Moves label up or down depending on the bubble
+function adjustLabelPosition(segment, x, y, size) {
+    switch(segment) {
+        case 'ultra':
+        case 'high':
+            return y - size / 2 - 15;
+        case 'low':
+            return y + size / 2 + 25;
+        default:
+            return y - size / 2 - 20;
+    }
+}
+
+// --- BUTTONS & EVENTS ---
+
+// Sets up click events for the toggle buttons
+function setupControls() {
+    document.querySelectorAll('.segment-toggle').forEach(button => {
+        button.addEventListener('click', function() {
+            const segment = this.dataset.segment;
+            artMarketData[segment].active = !artMarketData[segment].active;
+            this.classList.toggle('active');
+        });
+    });
+}
+
+// Hide a bubble if you click on it
+function mousePressed() {
+    for (let segment in artMarketData) {
+        if (artMarketData[segment].active) {
+            const data = artMarketData[segment];
+            let x = map(data.volume, 0, 160, 80, width - 80);
+            let y = map(data.value, 0, 200, height - 80, 60);
+            let distance = dist(mouseX, mouseY, x, y);
+
+            if (distance < data.size / 2) {
+                artMarketData[segment].active = false;
+                document.querySelector(`[data-segment="${segment}"]`)
+                        .classList.remove('active');
+                break;
+            }
+        }
+    }
+}
+
+// Resize the canvas if the window gets smaller
+function windowResized() {
+    if (windowWidth < 1000) {
+        resizeCanvas(windowWidth - 100, 500);
+    }
+}
+
+// --- UTILS ---
+
+// Returns the segment key if the mouse is over a bubble
+function getHoveredSegment() {
+    for (let segment in artMarketData) {
+        if (artMarketData[segment].active) {
+            const data = artMarketData[segment];
+            let x = map(data.volume, 0, 160, 80, width - 80);
+            let y = map(data.value, 0, 200, height - 80, 60);
+            let distance = dist(mouseX, mouseY, x, y);
+
+            if (distance < data.size / 2) {
+                return segment;
+            }
+        }
+    }
+    return null;
+}
