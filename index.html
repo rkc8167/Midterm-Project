@@ -1,1 +1,43 @@
-
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Market Visualizer</title>
+    <!-- this is to link the files to css and p5.js -->
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+</head>
+<body> 
+    <!-- this is to create a new section and add headings and a time selector -->
+    <div class="container">
+        <div class="header">
+            <h1>Annual Auction Sales Growth by Price Segment 2009-2024</h1>
+            <h2>Value vs Volume</h2>
+            <p>Source: Art Basel and UBS Global Art Market Report 2024</p>
+            <div class="time-selector">2009-2024</div>
+        </div>
+        <!-- this is to create a new section for the canvas for p5.js -->
+        <div id="canvas-container"></div>
+        <!-- this is to toggle between the different market segments -->
+        <div class="buttons">
+            <button class="segment-toggle-active" data-segment="ultra">
+                <span class="color-dot ultra"></span> Ultra High-End (&gt;$10M)
+            </button>
+            <button class="segment-toggle" data-segment="high">
+                <span class="color-dot high"></span> High-End ($1M-$10M)
+            </button>
+            <button class="segment-toggle" data-segment="mid">
+                <span class="color-dot mid"></span> Mid ($250K-$1M)
+            </button>
+            <button class="segment-toggle" data-segment="middle">
+                <span class="color-dot middle"></span> Middle ($50K-$250K)
+            </button>
+            <button class="segment-toggle" data-segment="low">
+                <span class="color-dot low"></span> Lower-Tier (&lt;$50k)
+            </button>
+        </div>
+    </div>
+    <script src="sketch.js"></script>
+</body>
+</html>
