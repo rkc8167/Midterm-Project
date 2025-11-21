@@ -1,11 +1,11 @@
 {
   "ultra": {
-    "name": "Ultra high (>$10m)", // name of artwork category 
-    "volume": 129, // no. of artworks in this category 
-    "value": 159, // no. of $ in this category 
-    "color": [255, 107, 134], // rgb visual representation bubble 
-    "size": 150, // size visual representation bubble 
-    "active": true // currently active argument 
+    "name": "Ultra high (>$10m)", //name of artwork category 
+    "volume": 129, //no. of artworks in this category 
+    "value": 159, //no. of $ in this category 
+    "color": [255, 107, 134], //rgb visual representation bubble 
+    "size": 150, //size visual representation bubble 
+    "active": true //currently active argument 
   },
 
   "high": {
