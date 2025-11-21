@@ -1,0 +1,42 @@
+{
+    "ultra": {
+        "name": "Ultra high (>$10m)",
+        "volume": 140,
+        "value": 190,
+        "color": [255, 107, 134],
+        "size": 150,
+        "active": true
+    },
+    "high": {
+        "name": "High ($1m–$10m)",
+        "volume": 55,
+        "value": 65,
+        "color": [74, 222, 128],
+        "size": 100,
+        "active": true
+    },
+    "mid": {
+        "name": "Mid ($250k–$1m)",
+        "volume": 25,
+        "value": 18,
+        "color": [167, 139, 250],
+        "size": 60,
+        "active": true
+    },
+    "middle": {
+        "name": "Middle ($50k–$250k)",
+        "volume": 15,
+        "value": 8,
+        "color": [251, 191, 36],
+        "size": 50,
+        "active": true
+    },
+    "low": {
+        "name": "Low end (<$50k)",
+        "volume": 105,
+        "value": 12,
+        "color": [251, 146, 60],
+        "size": 45,
+        "active": true
+    }
+}
