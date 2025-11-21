@@ -1,46 +1,10 @@
-// this is to list out the art market segment data and their properties 
-const artMarketData = {
-    ultra: {
-        name: "Ultra high (>$10m)",
-        volume: 140,        // % growth in lots sold
-        value: 190,         // % growth in sales value
-        color: [255, 107, 134], // change to pink 
-        size: 150,
-        active: true
-    },
-    high: {
-        name: "High ($1m–$10m)",
-        volume: 55,       // % growth in lots sold
-        value: 65,       // % growth in sales value
-        color: [74, 222, 128], // change to green 
-        size: 100,
-        active: true
-    },
-    mid: {
-        name: "Mid ($250k–$1m)",
-        volume: 25,     // % growth in lots sold
-        value: 18,      // % growth in sales value        
-        color: [167, 139, 250], // change to purple 
-        size: 60,
-        active: true
-    },
-    middle: {
-        name: "Middle ($50k–$250k)",
-        volume: 15,    // % growth in lots sold
-        value: 8,      // % growth in sales value
-        color: [251, 191, 36], // change to yellow 
-        size: 50,
-        active: true
-    },
-    low: {
-        name: "Low end (<$50k)",
-        volume: 105,  // % growth in lots sold
-        value: 12,    // % growth in sales value
-        color: [251, 146, 60], // change to orange 
-        size: 45,
-        active: true
-    }
-};
+// global variable for art market data
+let artMarketData;
+
+// preload the JSON data
+function preload() {
+    artMarketData = loadJSON("artmarket.json");
+}
 
 // this sets up and declares the global variables 
 
